@@ -21,7 +21,7 @@
     <ClCompile Include="LCD_Display.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="lcd_hw_sim.cpp">
+    <ClCompile Include="lcd_emulator.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClInclude Include="Fonts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lcd_hw_sim.h">
+    <ClInclude Include="lcd_emulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
