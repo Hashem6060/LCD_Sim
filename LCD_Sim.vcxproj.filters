@@ -18,7 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LCD_Display.cpp">
+    <ClCompile Include="bitmap.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="lcd_emulator.cpp">
@@ -29,7 +29,7 @@
     <ClInclude Include="LCD_Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LCD_Display.h">
+    <ClInclude Include="bitmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Fonts.h">

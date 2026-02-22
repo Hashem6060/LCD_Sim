@@ -127,13 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LCD_Display.cpp" />
+    <ClCompile Include="bitmap.cpp" />
     <ClCompile Include="lcd_emulator.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Fonts.h" />
-    <ClInclude Include="LCD_Display.h" />
+    <ClInclude Include="bitmap.h" />
     <ClInclude Include="lcd_emulator.h" />
     <ClInclude Include="LCD_Settings.h" />
   </ItemGroup>
