@@ -24,6 +24,15 @@
     <ClCompile Include="lcd_emulator.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="file_dislog.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="screenshot.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recorder.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LCD_Settings.h">
@@ -36,6 +45,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lcd_emulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="file_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="screenshot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recorder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

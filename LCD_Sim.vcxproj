@@ -128,14 +128,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bitmap.cpp" />
+    <ClCompile Include="file_dislog.cpp" />
     <ClCompile Include="lcd_emulator.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="recorder.cpp" />
+    <ClCompile Include="screenshot.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="file_dialog.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="bitmap.h" />
     <ClInclude Include="lcd_emulator.h" />
     <ClInclude Include="LCD_Settings.h" />
+    <ClInclude Include="recorder.h" />
+    <ClInclude Include="screenshot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
