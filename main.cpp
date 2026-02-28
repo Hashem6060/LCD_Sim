@@ -4,36 +4,44 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <ctime>
-
+#include "simulation.h"
 #include "lcd_emulator.h"
 #include "bitmap.h"
 
+#include "lcd_home.h"  // Home screen display
+
 int main() {
-    // Create window (240×128 LCD scaled 4x = 960×512)
-    sf::RenderWindow window(sf::VideoMode({ 960, 512 }), "LCD Emulator");
-    window.setFramerateLimit(30);
+    sf::RenderWindow window(sf::VideoMode({ 960, 512 }), "Generator LCD Home");
+    window.setFramerateLimit(60);
 
-    // Create LCD emulator (green monochrome, 4x scale)
-    LCDEmulator lcd(4);
+    LCDEmulator lcd(4);  // 4x scale
 
-    // Display your bitmap
-    //lcd.displayBitmap(nBitmapDC5XD);
+    // ===== Initial home screen state (edit these values!) =====
+    HomeScreenState state = {};
 
-    lcd.clear();
-    lcd.displayText("5121", 10, 10, true);   // dark green pixels
-    lcd.displayText("the screen is working ", 10, 30, true);
+    // Settings (toggle with keys 1-5)
+    state.generator_phase = 0;  // 0 = three phase, 1 = single phase
+    state.unit_setting = 0;     // 0=°C/KPA
 
-    // Ensure window is ready for rendering
-    window.display();
-    sf::sleep(sf::milliseconds(50));
+    // Simulated sensor readings - EDIT THESE TO MATCH YOUR SYSTEM!
+    state.voltage_LN = 230.5f;   // L-N voltage
+    state.voltage_LL = 400.2f;   // L-L voltage  
+    state.frequency = 50.0f;     // Hz
+    state.current = 12.5f;       // Amps
+    state.power = 5.2f;          // KW
+    state.battery_volts = 12.8f; // V
+    state.rpm = 1500;            // RPM (integer)
+    state.temperature = 85.3f;   // °C
+    state.oil_pressure = 4.2f;   // KPA/BAR/PSI
 
-    std::cout << "LCD Emulator Ready\n"
-        << "  [S] Save screenshot (PNG)\n"
+    std::cout << "Generator LCD Home Screen\n"
+        << "  [1] Toggle Phase: Three/L-N\n"
+        << "  [2-6] Cycle Unit: C/KPA, C/BAR, C/PSI, F/KPA, F/BAR\n"
+        << "  [S] Save screenshot\n"
         << "  [Esc] Exit\n" << std::endl;
 
-    // Main loop
     while (window.isOpen()) {
-        // Handle events (SFML 3.x style)
+        // ===== Event Handling =====
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
@@ -45,34 +53,36 @@ int main() {
                     window.close();
                     break;
 
+                case sf::Keyboard::Scancode::Num1:  // Toggle phase
+                    state.generator_phase = state.generator_phase ? 0 : 1;
+                    break;
+
+                case sf::Keyboard::Scancode::Num2: state.unit_setting = 0; break;  // °C/KPA
+                case sf::Keyboard::Scancode::Num3: state.unit_setting = 1; break;  // °C/BAR
+                case sf::Keyboard::Scancode::Num4: state.unit_setting = 2; break;  // °C/PSI
+                case sf::Keyboard::Scancode::Num5: state.unit_setting = 3; break;  // °F/KPA
+                case sf::Keyboard::Scancode::Num6: state.unit_setting = 4; break;  // °F/BAR
+
                 case sf::Keyboard::Scancode::S:  // Save screenshot
                 {
-                    // Generate timestamped filename: lcd_20260222_143022.png
                     char filename[64];
-                    // Replace the localtime section with this:
                     std::time_t now = std::time(nullptr);
                     std::tm timeinfo{};
-
 #ifdef _WIN32
-                    // Windows: use localtime_s
                     if (localtime_s(&timeinfo, &now) == 0) {
-                        std::strftime(filename, sizeof(filename), "lcd_%Y%m%d_%H%M%S.png", &timeinfo);
+                        std::strftime(filename, sizeof(filename),
+                            "lcd_%Y%m%d_%H%M%S.png", &timeinfo);
                     }
 #else
-                    // Linux/Mac: use localtime
                     std::tm* tmp = std::localtime(&now);
-                    if (tmp != nullptr) {
+                    if (tmp) {
                         timeinfo = *tmp;
-                        std::strftime(filename, sizeof(filename), "lcd_%Y%m%d_%H%M%S.png", &timeinfo);
+                        std::strftime(filename, sizeof(filename),
+                            "lcd_%Y%m%d_%H%M%S.png", &timeinfo);
                     }
 #endif
-
-                    // Save LCD canvas to PNG
                     if (lcd.saveToPNG(filename)) {
                         std::cout << "✓ Saved: " << filename << "\n";
-                    }
-                    else {
-                        std::cerr << "✗ Failed to save screenshot\n";
                     }
                     break;
                 }
@@ -80,10 +90,12 @@ int main() {
             }
         }
 
-        // Render frame
-        window.clear(sf::Color(30, 30, 30));  // Dark window background
-        lcd.render(window);                    // Draw LCD content
-        window.display();                      // Present to screen
+        // ===== Update and Render Home Screen =====
+        displayHomeScreen(lcd, state);
+
+        window.clear(sf::Color(30, 30, 30));
+        lcd.render(window);
+        window.display();
     }
 
     return 0;

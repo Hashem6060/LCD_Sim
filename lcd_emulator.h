@@ -36,4 +36,15 @@ public:
     void drawSimpleText(const char* text, int x, int y, bool pixelOn);
     // Save LCD canvas to PNG file
     [[nodiscard]] bool saveToPNG(const std::string& filepath) const;
+
+    // Accessors for external drawing functions
+    [[nodiscard]] sf::Image& getCanvas() { return canvas; }
+    [[nodiscard]] const sf::Image& getCanvas() const { return canvas; }
+    [[nodiscard]] sf::Color getColorOn() const { return colorOn; }
+    [[nodiscard]] sf::Color getColorOff() const { return colorOff; }
+    void updateTexture() { texture.update(canvas); }
+
+
+   
+
 };
