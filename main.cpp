@@ -10,92 +10,62 @@
 
 #include "lcd_home.h"  // Home screen display
 
+
+
+
+
+
 int main() {
-    sf::RenderWindow window(sf::VideoMode({ 960, 512 }), "Generator LCD Home");
+    sf::RenderWindow window(sf::VideoMode({ 960, 512 }), "Generator LCD simulation");
     window.setFramerateLimit(60);
 
     LCDEmulator lcd(4);  // 4x scale
+    // ===== Row 1: 20×20 Switch Symbols =====
+   // 16×16 lock symbol (2 bytes/row)
+    lcd.clear();
 
-    // ===== Initial home screen state (edit these values!) =====
-    HomeScreenState state = {};
+    // 8×16 symbol (16 bytes = 8 cols × 2 pages)
+    lcd.drawSymbol(SendReceive_Dot816[0], 8, 16, 8, 10, true);
+    lcd.drawSymbol(SendReceive_Dot816[1], 8, 16, 16, 10, true);
 
-    // Settings (toggle with keys 1-5)
-    state.generator_phase = 0;  // 0 = three phase, 1 = single phase
-    state.unit_setting = 0;     // 0=°C/KPA
+    // 16×16 symbol (32 bytes = 16 cols × 2 pages)
+    lcd.drawSymbol(nSign_Dot1616[0], 16, 16, 32, 10, true);
 
-    // Simulated sensor readings - EDIT THESE TO MATCH YOUR SYSTEM!
-    state.voltage_LN = 230.5f;   // L-N voltage
-    state.voltage_LL = 400.2f;   // L-L voltage  
-    state.frequency = 50.0f;     // Hz
-    state.current = 12.5f;       // Amps
-    state.power = 5.2f;          // KW
-    state.battery_volts = 12.8f; // V
-    state.rpm = 1500;            // RPM (integer)
-    state.temperature = 85.3f;   // °C
-    state.oil_pressure = 4.2f;   // KPA/BAR/PSI
+    // 18×16 RSSI symbol (36 bytes = 18 cols × 2 pages)
+    lcd.drawSymbol(RSSI_Dot1816[9], 18, 16, 48, 10, true);
 
-    std::cout << "Generator LCD Home Screen\n"
-        << "  [1] Toggle Phase: Three/L-N\n"
-        << "  [2-6] Cycle Unit: C/KPA, C/BAR, C/PSI, F/KPA, F/BAR\n"
-        << "  [S] Save screenshot\n"
-        << "  [Esc] Exit\n" << std::endl;
+    // 20×20 symbol (60 bytes = 20 cols × 3 pages)
+    lcd.drawSymbol(nSign_Dot2020[0], 20, 20, 70, 10, true);
+    lcd.drawSymbol(nSign_Dot2020[1], 20, 20, 92, 10, true);
+    lcd.drawSymbol(nSign_Dot2020[2], 20, 20, 114, 10, true);
+    lcd.drawSymbol(nSign_Dot2020[3], 20, 20, 136, 10, true);
+    lcd.drawSymbol(nSign_Dot2020[4], 20, 20, 158, 10, true);
+    lcd.drawSymbol(nSign_Dot2020[5], 20, 20, 180, 10, true);
 
+    // 24×16 symbol (48 bytes = 24 cols × 2 pages)
+    int x = 8;
+    lcd.drawSymbol(nSign_Dot2416[0], 24, 16, x, 40, true);
+    lcd.drawSymbol(nSign_Dot2416[1], 24, 16, x+26, 40, true);
+    lcd.drawSymbol(nSign_Dot2416[2], 24, 16, x+2*26, 40, true);
+    lcd.drawSymbol(nSign_Dot2416[3], 24, 16, x+3*26, 40, true);
+    lcd.drawSymbol(nSign_Dot2416[4], 24, 16, x+4*26, 40, true);
+    lcd.drawSymbol(nSign_Dot2416[5], 24, 16, x+5*26, 40, true);
+
+    lcd.updateTexture();  // ← REQUIRED!
+    
     while (window.isOpen()) {
-        // ===== Event Handling =====
+        // Handle events
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
-
-            if (const auto* key = event->getIf<sf::Event::KeyPressed>()) {
-                switch (key->scancode) {
-                case sf::Keyboard::Scancode::Escape:
-                    window.close();
-                    break;
-
-                case sf::Keyboard::Scancode::Num1:  // Toggle phase
-                    state.generator_phase = state.generator_phase ? 0 : 1;
-                    break;
-
-                case sf::Keyboard::Scancode::Num2: state.unit_setting = 0; break;  // °C/KPA
-                case sf::Keyboard::Scancode::Num3: state.unit_setting = 1; break;  // °C/BAR
-                case sf::Keyboard::Scancode::Num4: state.unit_setting = 2; break;  // °C/PSI
-                case sf::Keyboard::Scancode::Num5: state.unit_setting = 3; break;  // °F/KPA
-                case sf::Keyboard::Scancode::Num6: state.unit_setting = 4; break;  // °F/BAR
-
-                case sf::Keyboard::Scancode::S:  // Save screenshot
-                {
-                    char filename[64];
-                    std::time_t now = std::time(nullptr);
-                    std::tm timeinfo{};
-#ifdef _WIN32
-                    if (localtime_s(&timeinfo, &now) == 0) {
-                        std::strftime(filename, sizeof(filename),
-                            "lcd_%Y%m%d_%H%M%S.png", &timeinfo);
-                    }
-#else
-                    std::tm* tmp = std::localtime(&now);
-                    if (tmp) {
-                        timeinfo = *tmp;
-                        std::strftime(filename, sizeof(filename),
-                            "lcd_%Y%m%d_%H%M%S.png", &timeinfo);
-                    }
-#endif
-                    if (lcd.saveToPNG(filename)) {
-                        std::cout << "✓ Saved: " << filename << "\n";
-                    }
-                    break;
-                }
-                }
-            }
+            // Add more event handling here later (keys, mouse, etc.)
         }
 
-        // ===== Update and Render Home Screen =====
-        displayHomeScreen(lcd, state);
-
-        window.clear(sf::Color(30, 30, 30));
-        lcd.render(window);
-        window.display();
+        // Render frame
+        window.clear(sf::Color(30, 30, 30));  // Dark window background
+        lcd.render(window);                    // Draw blank LCD
+        window.display();                      // Present to screen
     }
 
     return 0;

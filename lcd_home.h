@@ -23,10 +23,10 @@ constexpr uint8_t eSET_generator_phase = 0;  // 1=single phase, 0=three phase
 constexpr uint8_t eSET_unit = 1;              // 0-4 for unit selection
 
 // ===== Symbol indices for SIGN_KR_2416 =====
-constexpr uint8_t SYM_OIL_PRESSURE = 0;  // 油压
-constexpr uint8_t SYM_TEMPERATURE = 1;  // 温度
-constexpr uint8_t SYM_BATTERY = 3;  // 电瓶
-constexpr uint8_t SYM_RPM = 4;  // 转速盘
+constexpr uint8_t SYM_OIL_PRESSURE = 0;  // 
+constexpr uint8_t SYM_TEMPERATURE = 1;  // 
+constexpr uint8_t SYM_BATTERY = 3;  // 
+constexpr uint8_t SYM_RPM = 4;  // 
 
 // ===== Home screen state =====
 struct HomeScreenState {
