@@ -58,6 +58,8 @@ public:
     void render(sf::RenderWindow& window);
     void displayText(const char* text, uint8_t x, uint8_t y, bool isOn,
         const FontDescriptor* font = nullptr);
+    // Draw a filled rectangle (like GUI_RectangleFill)
+    void drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool isOn);
     void clear();
     [[nodiscard]] bool saveToPNG(const std::string& filepath) const;
 

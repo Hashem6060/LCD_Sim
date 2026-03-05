@@ -166,3 +166,26 @@ bool LCDEmulator::saveToPNG(const std::string& filepath) const {
     if (path.size() < 4 || path.substr(path.size() - 4) != ".png") path += ".png";
     return canvas.saveToFile(path);
 }
+
+
+// ===== Draw Filled Rectangle (Like GUI_RectangleFill) =====
+void LCDEmulator::drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool isOn) {
+    // Ensure coordinates are in valid order
+    if (x0 > x1) std::swap(x0, x1);
+    if (y0 > y1) std::swap(y0, y1);
+
+    // Clamp to LCD bounds
+    x0 = std::max(x0, uint8_t(0));
+    y0 = std::max(y0, uint8_t(0));
+    x1 = std::min(x1, uint8_t(LCD_WIDTH - 1));
+    y1 = std::min(y1, uint8_t(LCD_HEIGHT - 1));
+
+    // Fill rectangle with color
+    sf::Color fillColor = isOn ? colorOn : colorOff;
+    for (uint8_t y = y0; y <= y1; ++y) {
+        for (uint8_t x = x0; x <= x1; ++x) {
+            canvas.setPixel(sf::Vector2u(x, y), fillColor);
+        }
+    }
+    // Note: Caller should call updateTexture() after drawing
+}
